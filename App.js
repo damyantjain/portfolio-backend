@@ -15,10 +15,12 @@ const sessionOptions = {
   saveUninitialized: false,
   resave: false,
 };
+
+console.log(process.env.FRONTEND_URL);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true,
+    optionsSuccessStatus: 200
   })
 );
 if (process.env.NODE_ENV !== "development") {
@@ -33,7 +35,7 @@ app.use(session(sessionOptions));
 app.use(express.json());
 BlogRoutes(app);
 
-const port = process.env.PORT || 4000;
+const port = 80;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
