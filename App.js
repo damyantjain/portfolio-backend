@@ -6,7 +6,7 @@ import session from "express-session";
 import BlogRoutes from "./Portfolio/Blog/routes.js";
 
 
-const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://127.0.0.1:27017/blogs';
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 mongoose.connect(CONNECTION_STRING);
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -34,4 +34,6 @@ app.use(express.json());
 BlogRoutes(app);
 
 const port = process.env.PORT || 4000;
-app.listen(port);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
