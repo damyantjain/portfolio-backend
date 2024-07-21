@@ -22,6 +22,15 @@ app.use(
     optionsSuccessStatus: 200
   })
 );
+
+app.use((req, res, next) => {
+  console.log('Request Headers:', req.headers);
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 if (process.env.NODE_ENV !== "development") {
   sessionOptions.proxy = true;
   sessionOptions.cookie = {
