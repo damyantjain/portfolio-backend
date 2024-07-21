@@ -16,7 +16,6 @@ const sessionOptions = {
   resave: false,
 };
 
-console.log(process.env.FRONTEND_URL);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -35,7 +34,7 @@ app.use(session(sessionOptions));
 app.use(express.json());
 BlogRoutes(app);
 
-const port = 80;
+const port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
