@@ -19,13 +19,10 @@ jobs:
         ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
         
     - name: Deploy to EC2
-      env:
-        HOST: "ec2-user@ec2-3-136-45-70.us-east-2.compute.amazonaws.com"
-        REPO_DIR: "portfolio-backend"
       run: |
-        ssh -o StrictHostKeyChecking=no $HOST << 'EOF'
-        cd $REPO_DIR
-        git pull origin master
-        npm install
-        pm2 restart all # or however you restart your node server
+        ssh -o StrictHostKeyChecking=no ec2-user@ec2-3-136-45-70.us-east-2.compute.amazonaws.com << 'EOF'
+          cd portfolio-backend
+          git pull origin master
+          npm install
+          pm2 restart all
         EOF
