@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'My API',
+      title: 'Portfolio API',
       version: '1.0.0',
-      description: 'My REST API',
+      description: 'APIs to support the portfolio page of Damyant Jain',
     },
     servers: [
       {
@@ -21,5 +21,5 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 export default function swagger(app) {
-  app.use('/api-docs', serve, setup(swaggerSpec));
+  app.use('/portfolioapi', serve, setup(swaggerSpec));
 }
