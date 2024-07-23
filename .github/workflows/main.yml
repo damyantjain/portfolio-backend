@@ -21,7 +21,7 @@ jobs:
     - name: Deploy to EC2
       env:
         HOST: "ec2-user@ec2-3-136-45-70.us-east-2.compute.amazonaws.com"
-        REPO_DIR: "./portfolio-backend"
+        REPO_DIR: "portfolio-backend"
       run: |
         ssh -o StrictHostKeyChecking=no $HOST << 'EOF'
         cd $REPO_DIR
