@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 import BlogRoutes from './Portfolio/Blog/routes.js';
 import swagger from './swagger.js';
+import AuthenticationRoutes from './Portfolio/Authentication/routes.js';
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 mongoose.connect(CONNECTION_STRING);
@@ -41,6 +42,7 @@ app.use(session(sessionOptions));
 swagger(app);
 
 BlogRoutes(app);
+AuthenticationRoutes(app);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
