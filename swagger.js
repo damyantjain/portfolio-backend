@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.FRONTEND_URL,
+        url: process.env.API_URL,
       },
     ],
   },
