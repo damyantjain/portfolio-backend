@@ -88,19 +88,11 @@ export default function AuthenticationRoutes(app) {
   const registerUser = async (req, res) => {
     try {
       const { username, password } = req.body;
-      const decryptedUsername = CryptoJS.AES.decrypt(
-        username,
-        process.env.CRYPTO_SECRET
-      ).toString(CryptoJS.enc.Utf8);
-      const decryptedPassword = CryptoJS.AES.decrypt(
-        password,
-        process.env.CRYPTO_SECRET
-      ).toString(CryptoJS.enc.Utf8);
-      const existingUser = await dao.findUserByUsername(decryptedUsername);
+      const existingUser = await dao.findUserByUsername(username);
       if (existingUser) {
         return res.status(400).send("Username already taken");
       }
-      const user = await dao.createUser(decryptedUsername, decryptedPassword);
+      const user = await dao.createUser(username, password);
       if (!user) {
         return res.status(400).send("Bad request");
       }
