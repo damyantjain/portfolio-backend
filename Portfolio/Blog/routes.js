@@ -29,9 +29,13 @@ export default function BlogRoutes(app) {
    *         description: A single blog
    */
   const findBlogById = async (req, res) => {
-    const id = req.params.id;
-    const blog = await dao.findBlogById(id);
-    res.json(blog);
+    try {
+      const id = req.params.id;
+      const blog = await dao.findBlogById(id);
+      res.json(blog);
+    } catch (error) {
+      res.status(404).send("Blog not found");
+    }
   };
 
   app.get("/api/blogs", findAllBlogs);
