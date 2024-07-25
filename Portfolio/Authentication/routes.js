@@ -1,7 +1,6 @@
 import * as dao from "./dao.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import CryptoJS from "crypto-js";
 import { decrypt } from "../../util/encrypt.js";
 
 export default function AuthenticationRoutes(app) {
