@@ -1,6 +1,8 @@
 import * as dao from "./dao.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import CryptoJS from "crypto-js";
+import { decrypt } from "../../util/encrypt.js";
 
 export default function AuthenticationRoutes(app) {
   /**
@@ -33,25 +35,32 @@ export default function AuthenticationRoutes(app) {
    *         description: Invalid username or password
    */
   const userLogin = async (req, res) => {
-    const user = await dao.findUserByUsername(req.body.username);
-    if (!user) {
-      res.status(401).send("Invalid username or password");
-      return;
+    try {
+      const decryptedUsername = decrypt(req.body.username);
+      const decryptedPassword = decrypt(req.body.password);
+      const user = await dao.findUserByUsername(decryptedUsername);
+
+      if (!user) {
+        res.status(401).send("Invalid username or password");
+        return;
+      }
+      const isPasswordValid = await bcrypt.compare(
+        decryptedPassword,
+        user.password
+      );
+      if (!isPasswordValid) {
+        res.status(401).send("Invalid username or password");
+        return;
+      }
+      const token = jwt.sign(
+        { username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      res.json({ token });
+    } catch (error) {
+      res.status(500).send("Server error");
     }
-    const isPasswordValid = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (!isPasswordValid) {
-      res.status(401).send("Invalid username or password");
-      return;
-    }
-    const token = jwt.sign(
-      { username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.json({ token });
   };
 
   /**
@@ -79,11 +88,19 @@ export default function AuthenticationRoutes(app) {
   const registerUser = async (req, res) => {
     try {
       const { username, password } = req.body;
-      const existingUser = await dao.findUserByUsername(username);
+      const decryptedUsername = CryptoJS.AES.decrypt(
+        username,
+        process.env.CRYPTO_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      const decryptedPassword = CryptoJS.AES.decrypt(
+        password,
+        process.env.CRYPTO_SECRET
+      ).toString(CryptoJS.enc.Utf8);
+      const existingUser = await dao.findUserByUsername(decryptedUsername);
       if (existingUser) {
         return res.status(400).send("Username already taken");
       }
-      const user = await dao.createUser(username, password);
+      const user = await dao.createUser(decryptedUsername, decryptedPassword);
       if (!user) {
         return res.status(400).send("Bad request");
       }
