@@ -1,10 +1,12 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import BlogRoutes from './Portfolio/Blog/routes.js';
 import swagger from './swagger.js';
 import AuthenticationRoutes from './Portfolio/Authentication/routes.js';
+import cors from 'cors';
 
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 mongoose.connect(CONNECTION_STRING);
@@ -12,6 +14,12 @@ mongoose.connect(CONNECTION_STRING);
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser()); 
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL, 
+  credentials: true,
+}));
 
 const sessionOptions = {
   secret: 'some secret',

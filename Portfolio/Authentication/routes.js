@@ -51,12 +51,23 @@ export default function AuthenticationRoutes(app) {
         res.status(401).send("Invalid username or password");
         return;
       }
-      const token = jwt.sign(
+      const accessToken = jwt.sign(
         { username: user.username },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
-      res.json({ token });
+      const refreshToken = jwt.sign(
+        { username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.json({ accessToken });
     } catch (error) {
       res.status(500).send("Server error");
     }
@@ -102,6 +113,43 @@ export default function AuthenticationRoutes(app) {
     }
   };
 
+  /**
+   * @swagger
+   * /api/refresh-token:
+   *   post:
+   *     summary: Refresh the access token using the refresh token
+   *     responses:
+   *       200:
+   *         description: Access token refreshed successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 accessToken:
+   *                   type: string
+   *       401:
+   *         description: Invalid or missing refresh token
+   */
+  const refreshToken = async (req, res) => {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      return res.status(401).send("No refresh token provided");
+    }
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+      const accessToken = jwt.sign(
+        { username: decoded.username },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      res.json({ accessToken });
+    } catch (error) {
+      res.status(401).send("Invalid refresh token");
+    }
+  };
+
   app.post("/api/login", userLogin);
   app.post("/api/register", registerUser);
+  app.post("/api/refresh-token", refreshToken);
 }
