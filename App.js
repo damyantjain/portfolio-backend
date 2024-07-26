@@ -22,11 +22,13 @@ app.use(cors({
 }));
 
 const sessionOptions = {
-  secret: 'some secret',
-  saveUninitialized: false,
+  secret: 'secret-key',
   resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+  },
 };
-
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
