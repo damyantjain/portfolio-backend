@@ -1,17 +1,22 @@
-import mongoose from "mongoose";
-const imageSchema = new mongoose.Schema({
-  name: String,
-  url: String,
-});
-const blogSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    description: String,
-    date: { type: Date, default: Date.now },
-    content: String,
-    image: [imageSchema],
-  },
-  { collection: "blogs" }
-);
+import mongoose from 'mongoose';
+
+const contentBlockSchema = new mongoose.Schema({
+  type: { type: String, required: true },
+  content: { type: String, required: true },
+  alt: { type: String },
+  caption: { type: String },
+  width: { type: Number },
+  height: { type: Number },
+  alignment: { type: String },
+  credits: { type: String }
+}, { _id: true });
+
+const blogSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  published: { type: Boolean, default: false },
+  contentBlocks: [contentBlockSchema],
+  author: { type: String, required: true },
+}, { timestamps: true });
 
 export default blogSchema;

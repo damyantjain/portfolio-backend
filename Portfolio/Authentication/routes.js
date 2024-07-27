@@ -4,35 +4,7 @@ import jwt from "jsonwebtoken";
 import { decrypt } from "../../util/encrypt.js";
 
 export default function AuthenticationRoutes(app) {
-  /**
-   * @swagger
-   * /api/login:
-   *   post:
-   *     summary: Log in a user
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               username:
-   *                 type: string
-   *               password:
-   *                 type: string
-   *     responses:
-   *       200:
-   *         description: Successful login
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 token:
-   *                   type: string
-   *       401:
-   *         description: Invalid username or password
-   */
+  
   const userLogin = async (req, res) => {
     try {
       const decryptedUsername = decrypt(req.body.username);
@@ -73,28 +45,6 @@ export default function AuthenticationRoutes(app) {
     }
   };
 
-  /**
-   * @swagger
-   * /api/register:
-   *   post:
-   *     summary: Register a new user
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               username:
-   *                 type: string
-   *               password:
-   *                 type: string
-   *     responses:
-   *       201:
-   *         description: User created successfully
-   *       400:
-   *         description: Bad request, possibly due to missing fields or username already taken
-   */
   const registerUser = async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -113,24 +63,6 @@ export default function AuthenticationRoutes(app) {
     }
   };
 
-  /**
-   * @swagger
-   * /api/refresh-token:
-   *   post:
-   *     summary: Refresh the access token using the refresh token
-   *     responses:
-   *       200:
-   *         description: Access token refreshed successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 accessToken:
-   *                   type: string
-   *       401:
-   *         description: Invalid or missing refresh token
-   */
   const refreshToken = async (req, res) => {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {

@@ -4,7 +4,6 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import BlogRoutes from './Portfolio/Blog/routes.js';
-import swagger from './swagger.js';
 import AuthenticationRoutes from './Portfolio/Authentication/routes.js';
 import cors from 'cors';
 
@@ -48,8 +47,6 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 app.use(session(sessionOptions));
-
-swagger(app);
 
 BlogRoutes(app);
 AuthenticationRoutes(app);
