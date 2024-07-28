@@ -8,8 +8,9 @@ const contentBlockSchema = new mongoose.Schema({
   width: { type: Number },
   height: { type: Number },
   alignment: { type: String },
-  credits: { type: String }
-}, { _id: true });
+  credits: { type: String },
+  _id: { type: String, required: true } 
+}, { _id: false });
 
 const blogSchema = new mongoose.Schema({
   title: { type: String, required: true },

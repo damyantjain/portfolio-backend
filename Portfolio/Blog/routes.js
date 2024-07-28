@@ -50,7 +50,7 @@ export default function BlogRoutes(app) {
       if (!updatedBlog) {
         return res.status(404).send("Blog not found");
       }
-      res.json(updatedBlog);
+      res.send("Blog updated"); 
     } catch (error) {
       res.status(500).send("Error updating blog");
     }
