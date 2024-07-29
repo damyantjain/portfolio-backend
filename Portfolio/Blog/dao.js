@@ -1,8 +1,8 @@
 import model from "./model.js";
 
-export const findAllBlogs = () => model.find({}, "title description date image");
+export const findAllBlogs = () => model.find({}, "title description updatedAt image");
 export const findPublishedBlogs = () =>
-  model.find({ published: true }, "title description date image");
+  model.find({ published: true }, "title description updatedAt image");
 export const findBlogById = (id) => model.findById(id);
 export const createBlog = (blog) => model.create(blog);
 export const updateBlog = async (id, blog) => {
