@@ -45,7 +45,6 @@ export default function BlogRoutes(app) {
 
   const updateBlog = async (req, res) => {
     try {
-      const username = req.user.username;
       const id = req.params.id;
       const blog = req.body;
       const updatedBlog = await dao.updateBlog(id, blog);

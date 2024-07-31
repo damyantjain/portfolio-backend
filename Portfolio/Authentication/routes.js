@@ -2,6 +2,8 @@ import * as dao from "./dao.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { decrypt } from "../../util/encrypt.js";
+import verifyJWT from "../../util/verifyJWT.js";
+
 
 export default function AuthenticationRoutes(app) {
   
@@ -47,14 +49,20 @@ export default function AuthenticationRoutes(app) {
 
   const registerUser = async (req, res) => {
     try {
+      
+      const username = req.user.username;
+      const user = await userDao.findUserByUsername(username);
+      if(user.role !== "admin") {
+        return res.status(403).send("You are not authorized to update blogs");
+      }
       const decryptedUsername = decrypt(req.body.username);
       const decryptedPassword = decrypt(req.body.password);
       const existingUser = await dao.findUserByUsername(decryptedUsername);
       if (existingUser) {
         return res.status(400).send("Username already taken");
       }
-      const user = await dao.createUser(decryptedUsername, decryptedPassword);
-      if (!user) {
+      const newUser = await dao.createUser(decryptedUsername, decryptedPassword);
+      if (!newUser) {
         return res.status(400).send("Bad request");
       }
       res.status(201).send("User created successfully");
@@ -83,6 +91,6 @@ export default function AuthenticationRoutes(app) {
   };
 
   app.post("/api/login", userLogin);
-  app.post("/api/register", registerUser);
+  app.post("/api/register", verifyJWT, registerUser);
   app.post("/api/refresh-token", refreshToken);
 }
