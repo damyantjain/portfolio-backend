@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+import verifyJWT from "../../util/verifyJWT.js";
 
 export default function BlogRoutes(app) {
   const findAllBlogs = async (req, res) => {
@@ -44,21 +45,22 @@ export default function BlogRoutes(app) {
 
   const updateBlog = async (req, res) => {
     try {
+      const username = req.user.username;
       const id = req.params.id;
       const blog = req.body;
       const updatedBlog = await dao.updateBlog(id, blog);
       if (!updatedBlog) {
         return res.status(404).send("Blog not found");
       }
-      res.send("Blog updated"); 
+      res.send("Blog updated");
     } catch (error) {
       res.status(500).send("Error updating blog");
     }
   };
 
-  app.get("/api/blogs", findAllBlogs);
+  app.get("/api/blogs", verifyJWT, findAllBlogs);
   app.get("/api/blogs/:id", findBlogById);
-  app.post("/api/blogs", createBlog);
-  app.put("/api/blogs/:id", updateBlog);
+  app.post("/api/blogs", verifyJWT, createBlog);
+  app.put("/api/blogs/:id", verifyJWT, updateBlog);
   app.get("/api/publishedblogs", findPublishedBlogs);
 }
