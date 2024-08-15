@@ -23,6 +23,7 @@ const blogSchema = new mongoose.Schema(
     contentBlocks: [contentBlockSchema],
     author: { type: String, required: true },
     image: { type: String },
+    keywords: { type: String },
   },
   { timestamps: true }
 );
