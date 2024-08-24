@@ -4,6 +4,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import BlogRoutes from './Portfolio/Blog/routes.js';
+import AnalyticsRoutes from './Portfolio/Analytics/routes.js';
 import AuthenticationRoutes from './Portfolio/Authentication/routes.js';
 import cors from 'cors';
 
@@ -50,6 +51,7 @@ app.use(session(sessionOptions));
 
 BlogRoutes(app);
 AuthenticationRoutes(app);
+AnalyticsRoutes(app);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
