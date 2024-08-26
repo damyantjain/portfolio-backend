@@ -1,4 +1,5 @@
 import * as dao from "./dao.js";
+import * as analyticsDao from "../Analytics/dao.js";
 import verifyJWT from "../../util/verifyJWT.js";
 
 export default function BlogRoutes(app) {
@@ -57,9 +58,25 @@ export default function BlogRoutes(app) {
     }
   };
 
+  const updateBlogVisitorCount = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const response = await dao.updateBlogVisitorCount(id);
+      if (response) {
+        analyticsDao.updateBlogVisitorCount();
+        res.status(200).send("Visitor count updated");
+      } else {
+        res.status(500).send("Error updating visitor count");
+      }
+    } catch (error) {
+      console.error("Error updating blog visitor count:", error);
+    }
+  };
+
   app.get("/api/blogs", verifyJWT, findAllBlogs);
   app.get("/api/blogs/:id", findBlogById);
   app.post("/api/blogs", verifyJWT, createBlog);
+  app.post("/api/blogs/:id/visitor-count", updateBlogVisitorCount);
   app.put("/api/blogs/:id", verifyJWT, updateBlog);
   app.get("/api/publishedblogs", findPublishedBlogs);
 }
