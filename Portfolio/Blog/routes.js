@@ -48,6 +48,7 @@ export default function BlogRoutes(app) {
     try {
       const id = req.params.id;
       const blog = req.body;
+      blog.updatedAt = Date.now();
       const updatedBlog = await dao.updateBlog(id, blog);
       if (!updatedBlog) {
         return res.status(404).send("Blog not found");
