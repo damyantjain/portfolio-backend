@@ -8,7 +8,7 @@ Link to the frontend repo - [Portfolio-Website](https://github.com/damyantjain/p
 
 - **Backend**: Express, Node.js
 - **Database**: MongoDB
-- **Deployment**: AWS EC2 instance
+- **Deployment**: AWS EC2 instance, Github Workflow
 
 ## Features
 
